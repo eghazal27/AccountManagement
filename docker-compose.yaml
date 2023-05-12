@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    container_name: pg_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test_db
+    ports:
+      - "5432:5432"
+    networks:
+        - psql-pgql
+
+  api:
+    build:
+        context: ./AccountManagement.API
+        dockerfile: Dockerfile
+    depends_on:
+        - db
+    ports:
+        - 5000:80
+    networks:
+        - psql-pgql
+
+
+networks:
+  psql-pgql:

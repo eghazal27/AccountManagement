@@ -5,3 +5,6 @@
 /.vs
 /AccountManagement.API/.vs
 /AccountManagement.API/bin/Debug/net7.0
+bin
+obj
+node_modules
