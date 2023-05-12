@@ -1,0 +1,53 @@
+version: '1.0'
+
+steps:
+  main_clone:
+    title: Cloning repository
+    type: git-clone
+    repo: https://github.com/eghazal27/AccountManagement.git
+    revision: master
+  
+  build:
+    title: Building Docker image
+    type: build
+    image_name: AccountManagement.API
+    working_directory: ./AccountManagement.API
+    tag: latest
+    dockerfile: Dockerfile
+  
+  test:
+    title: Running tests
+    type: freestyle
+    stage: test
+    working_directory: ./AccountManagement.API
+    script:
+      - dotnet test
+
+  #To be done later
+  #publish:
+  #  title: Publishing Docker image
+  #  type: push
+  #  candidate: your_image_name:latest
+  #  registry: your_registry_url
+  #  username: your_registry_username
+  #  password: your_registry_password
+
+  #deploy:
+  #  title: Deploying to Kubernetes
+  #  type: helm
+  #  version: 3
+  #  working_directory: ./path/to/your/app
+  #  arguments:
+  #    - upgrade
+  #    - release-name
+  #    - your_release_name
+  #    - ./path/to/your/helm/chart
+    
+triggers:
+  on:
+    push:
+      branches:
+        - master
+    pull_request:
+      branches:
+        - master
