@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  api:
+    build:
+        context: ./AccountManagement.API
+        dockerfile: Dockerfile
+    depends_on:
+        - db
+    ports:
+        - 5000:80
