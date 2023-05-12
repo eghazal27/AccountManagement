@@ -5,16 +5,6 @@ namespace AccountManagement.API.Application.Infrastructure
 {
     public static class CustomExtensions
     {
-        public static IServiceCollection RegisterRepos(this IServiceCollection services, IConfiguration configuration)
-        {
-            string connectionString = configuration["ConnectionStrings:DomainDatabase"];
-            services.AddSingleton<ICustomerRepository>(provider => new CustomerRepository(connectionString));
-            services.AddSingleton<IAccountRepository>(provider => new AccountRepository(connectionString));
-            services.AddSingleton<ITransactionRepository>(provider => new TransactionRepository(connectionString));
-
-            return services;
-
-        }
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountService, AccountService>();

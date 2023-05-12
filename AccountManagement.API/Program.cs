@@ -1,10 +1,6 @@
 using AccountManagement.API.Application.Infrastructure;
-using AccountManagement.Infrastructure.Data.Repositories;
-using Microsoft.Extensions.Configuration;
-using static AccountManagement.API.Application.Infrastructure.CustomExtensions;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerUI;
+using static AccountManagement.API.Application.Infrastructure.CustomExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-builder.Services.RegisterRepos(builder.Configuration);
+builder.Services.RegisterDBContextAndRepos(builder.Configuration);
 builder.Services.RegisterServices();
 
 // Configure Swagger
@@ -31,5 +27,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MigrateDBDContext();
+
 
 app.Run();

@@ -18,7 +18,6 @@ namespace AccountManagement.Service.Services
 
         public async Task<IEnumerable<Account>> GetAllAccountsAsync()
         {
-
             return await _accountRepository.GetAllAccountsAsync();
 
         }

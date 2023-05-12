@@ -1,32 +1,71 @@
 ﻿using AccountManagement.Domain.Models;
-using AccountManagement.Infrastructure.dbcontext;
-using Dapper;
-using Npgsql;
+using AccountManagement.Infrastructure.Data.dbcontext;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountManagement.Infrastructure.Data.Repositories
 {
     public interface IAccountRepository
     {
-        Task<IEnumerable<Account>> GetAllAccountsAsync();
+        void Add(Account account);
+        void Delete(Account account);
+        List<Account> GetAll();
+        Task<List<Account>> GetAllAccountsAsync();
+        Account GetById(int id);
+        Task<Account> GetUserByIdAsync(int id);
+        void Update(Account account);
     }
+
     public class AccountRepository : IAccountRepository
     {
+        private readonly AccountManagementDBContext _context;
 
-        private readonly string _connectionString;
-        public AccountRepository(string connectionString)
+        public AccountRepository(AccountManagementDBContext context)
         {
-            _connectionString = connectionString;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
         }
 
-        public async Task<IEnumerable<Account>> GetAllAccountsAsync()
+        public Account GetById(int id)
         {
-            var command = AccountManagemetDbContext.GETALLACCOUNTS;
-
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
-            return await connection.QueryAsync<Account>(command);
-
+            return _context.Accounts
+                .Include(a => a.User)
+                .Include(a => a.Transactions)
+                .FirstOrDefault(a => a.AccountId == id);
+        }
+        public async Task<Account> GetUserByIdAsync(int id)
+        {
+            return await _context.Accounts.FindAsync(id);
         }
 
+        public async Task<List<Account>> GetAllAccountsAsync()
+        {
+            return await _context.Accounts.ToListAsync();
+        }
+        public List<Account> GetAll()
+        {
+            return _context.Accounts
+                .Include(a => a.User)
+                .Include(a => a.Transactions)
+
+                .ToList();
+        }
+
+        public void Add(Account account)
+        {
+            _context.Accounts.Add(account);
+            _context.SaveChanges();
+        }
+
+        public void Update(Account account)
+        {
+            _context.Accounts.Update(account);
+            _context.SaveChanges();
+        }
+
+        public void Delete(Account account)
+        {
+            _context.Accounts.Remove(account);
+            _context.SaveChanges();
+        }
     }
 }
