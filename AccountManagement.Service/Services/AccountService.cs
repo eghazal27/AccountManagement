@@ -1,25 +1,30 @@
-﻿using AccountManagement.Domain.Models;
-using AccountManagement.Infrastructure.Data.Repositories;
+﻿using AccountManagement.Models;
 
 namespace AccountManagement.Service.Services
 {
     public interface IAccountService
     {
-        Task<IEnumerable<Account>> GetAllAccountsAsync();
+        Account GenerateAccount(UserCreationDto userCreationDto, string accountId);
     }
 
     public class AccountService : IAccountService
     {
-        private readonly IAccountRepository _accountRepository;
-        public AccountService(IAccountRepository accountRepository)
+        private readonly ITransactionServices _transactionServices;
+        public AccountService(ITransactionServices transactionServices)
         {
-            _accountRepository = accountRepository;
+            _transactionServices = transactionServices;
         }
-
-        public async Task<IEnumerable<Account>> GetAllAccountsAsync()
+        public Account GenerateAccount(UserCreationDto userCreationDto, string accountId)
         {
-            return await _accountRepository.GetAllAccountsAsync();
-
+            return new Account()
+            {
+                CustomerId = userCreationDto.CustomerId,
+                AccountId = accountId,
+                //Balance set as initial credit for now. 
+                //It can be updated to be an aggregation of transactions for data integrity
+                Balance = userCreationDto.InitialCredit,
+                Transactions = _transactionServices.GenerateTransactions(userCreationDto.InitialCredit, accountId)
+            };
         }
     }
 }

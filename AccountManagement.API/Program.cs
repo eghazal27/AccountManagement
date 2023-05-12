@@ -1,6 +1,7 @@
 using AccountManagement.API.Application.Infrastructure;
 using Microsoft.OpenApi.Models;
 using static AccountManagement.API.Application.Infrastructure.CustomExtensions;
+using AccountManagement.Service.Application.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MigrateDBDContext();
+//app.MigrateDBDContext();
 
 
 app.Run();

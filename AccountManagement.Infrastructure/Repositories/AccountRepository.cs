@@ -1,6 +1,4 @@
-﻿using AccountManagement.Domain.Models;
-using AccountManagement.Infrastructure.Data.dbcontext;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace AccountManagement.Infrastructure.Data.Repositories
 {
@@ -10,22 +8,22 @@ namespace AccountManagement.Infrastructure.Data.Repositories
         void Delete(Account account);
         List<Account> GetAll();
         Task<List<Account>> GetAllAccountsAsync();
-        Account GetById(int id);
+        Account GetById(string id);
         Task<Account> GetUserByIdAsync(int id);
         void Update(Account account);
     }
 
     public class AccountRepository : IAccountRepository
     {
-        private readonly AccountManagementDBContext _context;
+        private readonly AccountManagementDbContext _context;
 
-        public AccountRepository(AccountManagementDBContext context)
+        public AccountRepository(AccountManagementDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _context = context;
         }
 
-        public Account GetById(int id)
+        public Account GetById(string id)
         {
             return _context.Accounts
                 .Include(a => a.User)

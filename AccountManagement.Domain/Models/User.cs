@@ -1,18 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using AccountManagement.Domain.Models;
 
-namespace AccountManagement.Domain.Models
+public class User
 {
-    public class User
-    {
-        [JsonPropertyName("CustomerId")]
-        public int CustomerId { get; set; }
-        [JsonPropertyName("Name")]
-        public string Name { get; set; }
-        [JsonPropertyName("Surname")]
-        public string Surname { get; set; }
-
-        // Navigation property for Account
-        public ICollection<Account> Accounts { get; set; }
-    }
+    public string CustomerId { get; set; }
+    public string Name { get; set; }
+    public string LastName { get; set; }
+    public string Address { get; set; }
+    public string PhoneNumber { get; set; }
+    public ICollection<Account> Accounts { get; set; }
 }

@@ -1,5 +1,4 @@
 ﻿using AccountManagement.Domain.Models;
-using AccountManagement.Infrastructure.Data.dbcontext;
 
 namespace AccountManagement.Infrastructure.Data.Repositories
 {
@@ -13,9 +12,9 @@ namespace AccountManagement.Infrastructure.Data.Repositories
 
     public class AccountTransactionRepository : IAccountTransactionRepository
     {
-        private readonly AccountManagementDBContext _context;
+        private readonly AccountManagementDbContext _context;
 
-        public AccountTransactionRepository(AccountManagementDBContext context)
+        public AccountTransactionRepository(AccountManagementDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _context = context;

@@ -1,7 +1,5 @@
-﻿using AccountManagement.Infrastructure.Data.dbcontext;
-using AccountManagement.Infrastructure.Data.Repositories;
+﻿using AccountManagement.Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +15,11 @@ public static class DbContextExtensions
     /// <returns></returns>
     public static IServiceCollection RegisterDBContextAndRepos(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<AccountManagementDBContext>(options =>
-        options.UseNpgsql(configuration["ConnectionStrings:DomainDatabase"]));
+        //services.AddDbContext<AccountManagementDbContext>(options =>
+        //options.UseNpgsql(configuration["ConnectionStrings:DomainDatabase"]));
+
+        services.AddDbContext<AccountManagementDbContext>(options =>
+            options.UseInMemoryDatabase("AccountManagement"));
 
 
         // Register repositories
@@ -34,7 +35,7 @@ public static class DbContextExtensions
         // Apply pending migrations and update the database schema
         using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
         {
-            var dbContext = scope.ServiceProvider.GetService<AccountManagementDBContext>();
+            var dbContext = scope.ServiceProvider.GetService<AccountManagementDbContext>();
             dbContext.Database.Migrate();
         }
     }

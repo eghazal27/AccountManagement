@@ -1,17 +1,12 @@
 ﻿using AccountManagement.Infrastructure.Data.Repositories;
 using AccountManagement.Service.Services;
+using AccountManagement.Services;
 
 namespace AccountManagement.API.Application.Infrastructure
 {
     public static class CustomExtensions
     {
-        public static IServiceCollection RegisterServices(this IServiceCollection services)
-        {
-            services.AddScoped<IAccountService, AccountService>();
-
-            return services;
-
-        }
+       
 
         public static void ConfigureSwagger(this IApplicationBuilder app)
         {

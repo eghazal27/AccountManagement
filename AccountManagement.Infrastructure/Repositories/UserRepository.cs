@@ -1,35 +1,35 @@
-﻿using AccountManagement.Domain.Models;
-using AccountManagement.Infrastructure.Data.dbcontext;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace AccountManagement.Infrastructure.Data.Repositories
 {
     public interface IUserRepository
     {
-        User GetById(int id);
-        List<User> GetAll();
+        User GetById(string id);
+        User GetByAccountId(string accountId);
         void Add(User user);
-        void Update(User user);
-        void Delete(User user);
     }
 
     public class UserRepository : IUserRepository
     {
-        private readonly AccountManagementDBContext _context;
+        private readonly AccountManagementDbContext _context;
 
-        public UserRepository(AccountManagementDBContext context)
+        public UserRepository(AccountManagementDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _context = context;
         }
 
-        public User GetById(int id)
+        public User GetById(string id)
         {
-            return _context.Users.Find(id);
+            return _context.Users
+                .Include(u => u.Accounts)
+                    .ThenInclude(a => a.Transactions)
+                .FirstOrDefault(u => u.CustomerId == id);
         }
 
-        public List<User> GetAll()
+        public User GetByAccountId(string accountId)
         {
-            return _context.Users.ToList();
+            return _context.Users.FirstOrDefault(u => u.Accounts.Any(a => a.AccountId == accountId));
         }
 
         public void Add(User user)
@@ -38,16 +38,5 @@ namespace AccountManagement.Infrastructure.Data.Repositories
             _context.SaveChanges();
         }
 
-        public void Update(User user)
-        {
-            _context.Users.Update(user);
-            _context.SaveChanges();
-        }
-
-        public void Delete(User user)
-        {
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-        }
     }
 }

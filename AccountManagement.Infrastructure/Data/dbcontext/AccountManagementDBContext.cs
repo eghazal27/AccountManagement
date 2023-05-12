@@ -1,73 +1,64 @@
 ﻿using AccountManagement.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountManagement.Infrastructure.Data.dbcontext
+public class AccountManagementDbContext : DbContext
 {
-    public class AccountManagementDBContext : DbContext
+    public DbSet<User> Users { get; set; }
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<AccountTransaction> AccountTransactions { get; set; }
+
+    public AccountManagementDbContext(DbContextOptions<AccountManagementDbContext> options)
+        : base(options)
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<AccountTransaction> AccountTransactions { get; set; }
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseInMemoryDatabase("AccountManagement");
+    }
 
-        public AccountManagementDBContext(DbContextOptions<AccountManagementDBContext> options) : base(options)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Set default schema (optional)
+        modelBuilder.HasDefaultSchema("public");
+
+        modelBuilder.Entity<User>(entity =>
         {
-        }
+            entity.ToTable("User");
+            entity.HasKey(u => u.CustomerId);
+            entity.Property(u => u.Name).IsRequired().HasMaxLength(255);
+            entity.Property(u => u.LastName).IsRequired().HasMaxLength(255);
+            entity.Property(u => u.Address).IsRequired().HasMaxLength(255);
+            entity.Property(u => u.PhoneNumber).IsRequired().HasMaxLength(255);
+        });
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        modelBuilder.Entity<Account>(entity =>
         {
-            //SQL_Latin1_General_CP1_CI_AS added to configure postgres case insensitive
+            entity.HasKey(a => a.AccountId);
+            entity.Property(a => a.CustomerId).IsRequired().HasMaxLength(255);
+            entity.Property(a => a.Balance).IsRequired().HasColumnType("numeric(18, 2)");
 
-            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            // Example of a relationship with User
+            entity.HasOne(a => a.User)
+                .WithMany(u => u.Accounts)
+                .HasForeignKey(a => a.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
+        modelBuilder.Entity<AccountTransaction>(entity =>
+        {
+            entity.HasKey(t => t.TransactionId);
+            entity.Property(t => t.AccountId).IsRequired().HasMaxLength(255);
+            entity.Property(t => t.Amount).IsRequired().HasColumnType("numeric(18, 2)");
+            entity.Property(t => t.TransactionDate).IsRequired();
+            entity.Property(t => t.TransactionType).IsRequired();
 
-            base.OnModelCreating(modelBuilder);
-
-            // Set default schema (optional)
-            modelBuilder.HasDefaultSchema("public");
-
-            // Apply entity configurations from assembly
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AccountManagementDBContext).Assembly);
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.ToTable("users"); // Specify table name
-                entity.HasKey(u => u.CustomerId);
-                entity.Property(u => u.CustomerId).HasColumnName("customerid").IsRequired().HasMaxLength(50);
-                entity.Property(u => u.Name).HasColumnName("name").IsRequired().HasMaxLength(50);
-                entity.Property(u => u.Surname).HasColumnName("surname").IsRequired().HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Account>(entity =>
-            {
-                entity.ToTable("accounts"); // Specify table name
-                entity.HasKey(a => a.AccountId);
-                entity.Property(a => a.AccountId).HasColumnName("accountid");
-                entity.Property(a => a.CustomerId).HasColumnName("customerid").IsRequired();
-                entity.Property(a => a.Balance).HasColumnName("balance").IsRequired().HasColumnType("decimal(18, 2)");
-
-                // Example of a relationship with User
-                entity.HasOne(a => a.User)
-                    .WithMany(u => u.Accounts)
-                    .HasForeignKey(a => a.CustomerId);
-            });
-
-            modelBuilder.Entity<AccountTransaction>(entity =>
-            {
-                entity.ToTable("accounttransactions"); // Specify table name
-                entity.HasKey(t => t.TransactionId);
-                entity.Property(t => t.TransactionId).HasColumnName("transactionid");
-                entity.Property(t => t.AccountId).HasColumnName("accountid").IsRequired().HasColumnType("decimal(18, 2)");
-                entity.Property(t => t.Amount).HasColumnName("ammount").IsRequired().HasColumnType("decimal(18, 2)");
-                entity.Property(t => t.TransactionDate).HasColumnName("transactiondate").IsRequired();
-
-                // Example of a relationship with Account
-                entity.HasOne(t => t.Account)
-                    .WithMany(a => a.Transactions)
-                    .HasForeignKey(t => t.AccountId);
-            });
-
-            //SeedData.Initialize(this);
-        }
-
+            // Example of a relationship with Account
+            entity.HasOne(t => t.Account)
+                .WithMany(a => a.Transactions)
+                .HasForeignKey(t => t.AccountId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }

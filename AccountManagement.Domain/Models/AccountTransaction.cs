@@ -4,19 +4,17 @@ namespace AccountManagement.Domain.Models
 {
     public class AccountTransaction
     {
-        [JsonPropertyName("TransactionId")]
-        public int TransactionId { get; set; }
-
-        [JsonPropertyName("AccountId")]
-        public int AccountId { get; set; }
-
-        [JsonPropertyName("Amount")]
-        public decimal Amount { get; set; }
-
-        [JsonPropertyName("TransactionDate")]
+        public string TransactionId { get; set; }
+        public string AccountId { get; set; }
+        public double Amount { get; set; }
         public DateTime TransactionDate { get; set; }
-
-        // Navigation property for Account
+        public TransactionType TransactionType { get; set; }
         public Account Account { get; set; }
+    }
+
+    public enum TransactionType
+    {
+        Credit,
+        Debit
     }
 }
