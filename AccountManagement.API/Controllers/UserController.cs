@@ -5,6 +5,7 @@ using AccountManagement.Models;
 using AccountManagement.Services;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountManagement.Controllers
 {
@@ -36,7 +37,7 @@ namespace AccountManagement.Controllers
                 ReferenceHandler = ReferenceHandler.Preserve,
             });
 
-            return Ok(jsonResult);
+            return Ok("User Created");
         }
 
 
@@ -52,8 +53,17 @@ namespace AccountManagement.Controllers
 
             return Ok(userInformation);
         }
+        [HttpGet("users")]
+        public IActionResult GetUsersInformation()
+        {
+            var userInformation = _userService.GetAllUserInformation();
 
+            if (userInformation == null)
+            {
+                return NotFound();
+            }
 
-
+            return Ok(userInformation);
+        }
     }
 }

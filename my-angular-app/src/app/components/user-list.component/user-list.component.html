@@ -1,0 +1,58 @@
+<div class="add-user-container">
+    <h3>Add User</h3>
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" [(ngModel)]="newUser.Name" />
+    </div>
+    <div>
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" [(ngModel)]="newUser.LastName" />
+    </div>
+    <div>
+      <label for="address">Address:</label>
+      <input type="text" id="address" [(ngModel)]="newUser.Address" />
+    </div>
+    <div>
+      <label for="phoneNumber">Phone Number:</label>
+      <input type="text" id="phoneNumber" [(ngModel)]="newUser.PhoneNumber" />
+    </div>
+    <div>
+      <label for="customerId">Customer ID:</label>
+      <input type="text" id="customerId" [(ngModel)]="newUser.CustomerId" />
+    </div>
+    <div>
+      <label for="initialCredit">Initial Credit:</label>
+      <input
+        type="number"
+        id="initialCredit"
+        [(ngModel)]="newUser.InitialCredit"
+      />
+    </div>
+    <button (click)="addUser()">Save</button>
+  </div>
+  
+  <button (click)="fetchUsers()">List Users</button>
+  <div class="user-card-container">
+    <div class="user-card-container">
+      <div class="user-card" *ngFor="let user of users">
+        <div class="user-details">
+          <h3>{{ user.name }} {{ user.lastName }}</h3>
+          <p>Address: {{ user.address }}</p>
+          <p>Phone Number: {{ user.phoneNumber }}</p>
+          <h4>Accounts</h4>
+          <div class="account-details" *ngFor="let account of user.accounts">
+            <p>Balance: {{ account.balance }}</p>
+            <h5>Transactions</h5>
+            <ul>
+              <li *ngFor="let transaction of account.transactions">
+                <p>Amount: {{ transaction.amount }}</p>
+                <p>Date: {{ transaction.transactionDate }}</p>
+                <p>Type: {{ transaction.transactionType }}</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

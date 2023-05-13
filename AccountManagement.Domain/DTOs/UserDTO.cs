@@ -1,6 +1,5 @@
 ﻿using AccountManagement.Domain.DTOs;
-using AccountManagement.Domain.Models;
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccountManagement.Models
 {
@@ -11,8 +10,11 @@ namespace AccountManagement.Models
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string CustomerId { get; set; }
+
+        [Range(0, double.MaxValue, ErrorMessage = "InitialCredit must be a positive value.")]
         public double InitialCredit { get; set; }
     }
+
     public class UserInformationDto
     {
         public string Name { get; set; }

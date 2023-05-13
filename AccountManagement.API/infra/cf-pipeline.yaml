@@ -23,7 +23,7 @@ steps:
     script:
       - dotnet test
 
-  #To be done later
+  #To be done later once we have a docker container registry and a cluster to deploy to.
   #publish:
   #  title: Publishing Docker image
   #  type: push
