@@ -41,11 +41,11 @@ namespace AccountManagement.Service.Services
             account.Transactions.Add(transaction);
 
             // Update the account balance based on the transaction type
-            if (transactionDto.TransactionType == TransactionType.Credit)
+            if (transactionDto.TransactionType == TransactionType.Deposit)
             {
                 account.Balance += transactionDto.Amount;
             }
-            else if (transactionDto.TransactionType == TransactionType.Debit)
+            else if (transactionDto.TransactionType == TransactionType.Withdrawal)
             {
                 account.Balance -= transactionDto.Amount;
             }
@@ -64,7 +64,7 @@ namespace AccountManagement.Service.Services
                             Amount = ammount,
                             TransactionDate =    DateTime.Now.ToUniversalTime(),
                             TransactionId    =   Guid.NewGuid().ToString(),
-                            TransactionType = TransactionType.Credit,
+                            TransactionType = TransactionType.Deposit,
                             AccountId = accountId
                         }
                     };

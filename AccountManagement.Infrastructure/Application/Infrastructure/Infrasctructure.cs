@@ -1,4 +1,5 @@
 ﻿using AccountManagement.Infrastructure.Data.Repositories;
+using AccountManagement.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,13 +31,13 @@ public static class DbContextExtensions
         return services;
     }
 
-    public static void MigrateDBDContext(this IApplicationBuilder app)
+    public static void SeedData(this IApplicationBuilder app)
     {
         // Apply pending migrations and update the database schema
         using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
         {
             var dbContext = scope.ServiceProvider.GetService<AccountManagementDbContext>();
-            dbContext.Database.Migrate();
+            dbContext.SeedData();
         }
     }
 }

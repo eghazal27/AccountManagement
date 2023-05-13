@@ -11,7 +11,7 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 
 builder.Services.RegisterDBContextAndRepos(builder.Configuration);
 builder.Services.RegisterServices();
-
+builder.Services.EnableCORS();
 // Configure Swagger
 builder.Services.AddSwaggerGen(c =>
 {
@@ -28,8 +28,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-//app.MigrateDBDContext();
+app.UseCors();
+app.SeedData();
 
 
 app.Run();

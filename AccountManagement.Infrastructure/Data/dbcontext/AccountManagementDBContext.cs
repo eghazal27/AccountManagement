@@ -1,4 +1,5 @@
 ﻿using AccountManagement.Domain.Models;
+using AccountManagement.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 public class AccountManagementDbContext : DbContext
@@ -14,8 +15,9 @@ public class AccountManagementDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseInMemoryDatabase("AccountManagement");
-    }
 
+    }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -60,5 +62,8 @@ public class AccountManagementDbContext : DbContext
                 .HasForeignKey(t => t.AccountId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        
+
     }
 }

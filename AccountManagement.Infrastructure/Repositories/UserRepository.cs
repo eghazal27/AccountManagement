@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using AccountManagement.Infrastructure.Extensions;
 
 namespace AccountManagement.Infrastructure.Data.Repositories
 {
@@ -7,6 +8,7 @@ namespace AccountManagement.Infrastructure.Data.Repositories
         User GetById(string id);
         User GetByAccountId(string accountId);
         void Add(User user);
+        IEnumerable<User> GetAll();
     }
 
     public class UserRepository : IUserRepository
@@ -30,6 +32,12 @@ namespace AccountManagement.Infrastructure.Data.Repositories
         public User GetByAccountId(string accountId)
         {
             return _context.Users.FirstOrDefault(u => u.Accounts.Any(a => a.AccountId == accountId));
+        } 
+        
+        public IEnumerable<User> GetAll()
+        {
+            return _context.Users.Include(u => u.Accounts)
+                    .ThenInclude(a => a.Transactions);
         }
 
         public void Add(User user)
@@ -37,6 +45,5 @@ namespace AccountManagement.Infrastructure.Data.Repositories
             _context.Users.Add(user);
             _context.SaveChanges();
         }
-
     }
 }

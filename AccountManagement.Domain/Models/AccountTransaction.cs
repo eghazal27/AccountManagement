@@ -14,7 +14,7 @@ namespace AccountManagement.Domain.Models
 
     public enum TransactionType
     {
-        Credit,
-        Debit
+        Deposit,
+        Withdrawal
     }
 }

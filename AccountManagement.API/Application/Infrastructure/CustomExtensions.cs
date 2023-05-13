@@ -6,8 +6,6 @@ namespace AccountManagement.API.Application.Infrastructure
 {
     public static class CustomExtensions
     {
-       
-
         public static void ConfigureSwagger(this IApplicationBuilder app)
         {
             app.UseSwagger();
@@ -17,6 +15,19 @@ namespace AccountManagement.API.Application.Infrastructure
             {
                 c.SwaggerEndpoint("v1/swagger.json", "Account Management API v1");
             });
+        }
+        public static void EnableCORS(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+
         }
 
     }
