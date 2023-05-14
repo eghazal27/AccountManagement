@@ -8,7 +8,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["./AccountManagement.API.csproj", "AccountManagement.API/"]
-COPY ["./AccountManagement.API/nuget.config", "AccountManagement.API/"]
 COPY ["./AccountManagement.Domain/AccountManagement.Domain.csproj", "AccountManagement.Domain/"]
 COPY ["./AccountManagement.Infrastructure/AccountManagement.Infrastructure.csproj", "AccountManagement.Infrastructure/"]
 COPY ["./AccountManagement.Services/AccountManagement.Services.csproj", "AccountManagement.Services/"]
