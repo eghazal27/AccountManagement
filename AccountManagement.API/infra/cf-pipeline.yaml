@@ -1,53 +1,39 @@
-version: '1.0'
+# More examples of Codefresh YAML can be found at
+# https://codefresh.io/docs/docs/yaml-examples/examples/
+
+version: "1.0"
+# Stages can help you organize your steps in stages
+stages:
+  - "clone"
+  - "build"
+  - "test"
 
 steps:
-  main_clone:
-    title: Cloning repository
-    type: git-clone
-    repo: https://github.com/eghazal27/AccountManagement.git
-    revision: master
-  
+  clone:
+    title: "Cloning repository"
+    type: "git-clone"
+    repo: "eghazal27/AccountManagement"
+    # CF_BRANCH value is auto set when pipeline is triggered
+    # Learn more at codefresh.io/docs/docs/codefresh-yaml/variables/
+    revision: "${{CF_BRANCH}}"
+    git: "github"
+    stage: "clone"
+
   build:
-    title: Building Docker image
-    type: build
-    image_name: AccountManagement.API
-    working_directory: ./AccountManagement.API
-    tag: latest
-    dockerfile: Dockerfile
-  
+    title: "Building Docker image"
+    type: "build"
+    image_name: "eghazal27/AccountManagement"
+    working_directory: "${{clone}}/AccountManagement.API"
+    tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
+    dockerfile: "Dockerfile"
+    stage: "build"
+
   test:
-    title: Running tests
-    type: freestyle
-    stage: test
-    working_directory: ./AccountManagement.API
-    script:
-      - dotnet test
+    title: "Running test"
+    type: "freestyle" # Run any command
+    image: "ubuntu:latest" # The image in which command will be executed
+    working_directory: "${{clone}}" # Running command where code cloned
+    commands:
+      - "ls"
+    stage: "test"
 
-  #To be done later once we have a docker container registry and a cluster to deploy to.
-  #publish:
-  #  title: Publishing Docker image
-  #  type: push
-  #  candidate: your_image_name:latest
-  #  registry: your_registry_url
-  #  username: your_registry_username
-  #  password: your_registry_password
-
-  #deploy:
-  #  title: Deploying to Kubernetes
-  #  type: helm
-  #  version: 3
-  #  working_directory: ./path/to/your/app
-  #  arguments:
-  #    - upgrade
-  #    - release-name
-  #    - your_release_name
-  #    - ./path/to/your/helm/chart
-    
-triggers:
-  on:
-    push:
-      branches:
-        - master
-    pull_request:
-      branches:
-        - master
