@@ -12,7 +12,7 @@ COPY ["AccountManagement.Infrastructure/AccountManagement.Infrastructure.csproj"
 
 
 COPY . .
-WORKDIR "/src/AccountManagement/AccountManagement.API/AccountManagement.API"
+WORKDIR "/src/AccountManagement/AccountManagement.API"
 
 RUN dotnet build "AccountManagement.API.csproj"  -c Release -o /app/build
 
